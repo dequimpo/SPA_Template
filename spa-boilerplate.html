@@ -1,0 +1,1646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <!--
+    ╔══════════════════════════════════════════════════════════╗
+    ║  DBDNJ SPA BOILERPLATE — v1.0                           ║
+    ║  Based on: SharePoint Guide Design System               ║
+    ║  Fonts: Cormorant Garamond (display) + DM Sans (body)  ║
+    ╚══════════════════════════════════════════════════════════╝
+  -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Day by Day Christian Ministries — Single Page Application" />
+  <title>DBDNJ · App Boilerplate</title>
+
+  <!-- ── FONTS ── -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ═══════════════════════════════════════════════════════════════
+       ❶  DESIGN TOKENS — Edit here to retheme the entire app
+       ═══════════════════════════════════════════════════════════════ */
+    :root {
+      /* ── Brand palette ── */
+      --color-primary:        #2484C1;   /* Church Blue        */
+      --color-primary-light:  #3AABEF;   /* Hover / accent      */
+      --color-primary-dark:   #0D3F5F;   /* Dark headings       */
+      --color-primary-deep:   #0A2D45;   /* Header / sidebar bg */
+      --color-accent:         #F5C518;   /* Gold Yellow CTA     */
+      --color-accent-light:   #FFD84A;   /* Hover yellow        */
+      --color-muted:          #7AACCC;   /* Subdued text        */
+      --color-cream:          #F0F8FF;   /* Near-white surface  */
+      --color-bg:             #F4F7FB;   /* Page background     */
+      --color-surface:        #FFFFFF;   /* Card / panel        */
+      --color-text:           #1A2332;   /* Body text           */
+      --color-text-soft:      #4B5563;   /* Secondary text      */
+      --color-border:         rgba(36,132,193,.18);
+
+      /* ── Code block ── */
+      --color-code-bg:        #051420;
+      --color-code-text:      #C7E6FF;
+
+      /* ── Typography ── */
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body:    'DM Sans', system-ui, sans-serif;
+      --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
+
+      --text-xs:   .7rem;
+      --text-sm:   .85rem;
+      --text-base: 1rem;
+      --text-lg:   1.125rem;
+      --text-xl:   1.35rem;
+      --text-2xl:  1.7rem;
+      --text-3xl:  2.2rem;
+      --text-4xl:  clamp(1.9rem, 5vw, 2.8rem);
+
+      /* ── Spacing scale (0.25rem base) ── */
+      --sp-1:  .25rem;
+      --sp-2:  .5rem;
+      --sp-3:  .75rem;
+      --sp-4:  1rem;
+      --sp-5:  1.25rem;
+      --sp-6:  1.5rem;
+      --sp-8:  2rem;
+      --sp-10: 2.5rem;
+      --sp-12: 3rem;
+      --sp-16: 4rem;
+
+      /* ── Layout ── */
+      --header-h:      64px;
+      --sidebar-w:     260px;
+      --content-max:   960px;
+      --radius-sm:     4px;
+      --radius-md:     8px;
+      --radius-lg:     12px;
+      --radius-pill:   9999px;
+
+      /* ── Elevation / shadows ── */
+      --shadow-xs: 0 1px 3px rgba(10,45,69,.08);
+      --shadow-sm: 0 2px 8px rgba(10,45,69,.10);
+      --shadow-md: 0 4px 16px rgba(10,45,69,.13);
+      --shadow-lg: 0 8px 32px rgba(10,45,69,.16);
+
+      /* ── Transitions ── */
+      --ease-out: cubic-bezier(.4, 0, .2, 1);
+      --dur-fast:   150ms;
+      --dur-normal: 250ms;
+      --dur-slow:   400ms;
+
+      /* ── View transition ── */
+      --view-fade-dur: 200ms;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       ❷  RESET
+       ═══════════════════════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+      font-size: 16px;
+    }
+
+    body {
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      line-height: 1.65;
+      color: var(--color-text);
+      background: var(--color-bg);
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    img, video, iframe, svg { max-width: 100%; height: auto; display: block; }
+    a { color: var(--color-primary); text-decoration: none; }
+    a:hover { color: var(--color-primary-light); }
+    a:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; border-radius: var(--radius-sm); }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+    ul, ol { list-style: none; }
+
+    /* ═══════════════════════════════════════════════════════════════
+       ❸  UTILITY CLASSES — spacing, flex, grid, typography
+       ═══════════════════════════════════════════════════════════════ */
+
+    /* Display */
+    .flex         { display: flex; }
+    .flex-col     { flex-direction: column; }
+    .items-center { align-items: center; }
+    .items-start  { align-items: flex-start; }
+    .justify-between { justify-content: space-between; }
+    .justify-center  { justify-content: center; }
+    .flex-wrap    { flex-wrap: wrap; }
+    .gap-2  { gap: var(--sp-2); }
+    .gap-3  { gap: var(--sp-3); }
+    .gap-4  { gap: var(--sp-4); }
+    .gap-6  { gap: var(--sp-6); }
+    .flex-1 { flex: 1 1 auto; }
+
+    .grid { display: grid; }
+    /* Responsive auto-fit grid — cols auto at ≥240px */
+    .grid-auto { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--sp-5); }
+    .grid-2    { display: grid; grid-template-columns: 1fr; gap: var(--sp-5); }
+    .grid-3    { display: grid; grid-template-columns: 1fr; gap: var(--sp-5); }
+    @media (min-width: 640px)  { .grid-2 { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 768px)  { .grid-3 { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1024px) { .grid-3 { grid-template-columns: repeat(3, 1fr); } }
+
+    /* Spacing */
+    .mt-2  { margin-top: var(--sp-2); }  .mt-4  { margin-top: var(--sp-4); }
+    .mt-6  { margin-top: var(--sp-6); }  .mt-8  { margin-top: var(--sp-8); }
+    .mb-2  { margin-bottom: var(--sp-2); } .mb-4  { margin-bottom: var(--sp-4); }
+    .mb-6  { margin-bottom: var(--sp-6); } .mb-8  { margin-bottom: var(--sp-8); }
+    .p-4   { padding: var(--sp-4); }     .p-6   { padding: var(--sp-6); }
+    .px-4  { padding-inline: var(--sp-4); } .px-6 { padding-inline: var(--sp-6); }
+    .py-4  { padding-block: var(--sp-4); }  .py-6 { padding-block: var(--sp-6); }
+
+    /* Typography */
+    .font-display   { font-family: var(--font-display); }
+    .font-mono      { font-family: var(--font-mono); }
+    .text-xs   { font-size: var(--text-xs); }
+    .text-sm   { font-size: var(--text-sm); }
+    .text-lg   { font-size: var(--text-lg); }
+    .text-xl   { font-size: var(--text-xl); }
+    .text-2xl  { font-size: var(--text-2xl); }
+    .text-3xl  { font-size: var(--text-3xl); }
+    .font-bold   { font-weight: 700; }
+    .font-semibold { font-weight: 600; }
+    .font-medium { font-weight: 500; }
+    .text-muted  { color: var(--color-muted); }
+    .text-soft   { color: var(--color-text-soft); }
+    .text-accent { color: var(--color-accent); }
+    .text-primary { color: var(--color-primary); }
+    .text-cream  { color: var(--color-cream); }
+    .tracking-wide   { letter-spacing: .1em; }
+    .tracking-wider  { letter-spacing: .2em; }
+    .uppercase { text-transform: uppercase; }
+    .text-center { text-align: center; }
+
+    /* Surface / card */
+    .surface {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-xs);
+    }
+    .surface-dark {
+      background: var(--color-primary-deep);
+      color: var(--color-cream);
+      border-radius: var(--radius-md);
+    }
+    .rounded-sm  { border-radius: var(--radius-sm); }
+    .rounded     { border-radius: var(--radius-md); }
+    .rounded-lg  { border-radius: var(--radius-lg); }
+    .rounded-full { border-radius: var(--radius-pill); }
+
+    /* Visibility */
+    .sr-only {
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; margin: -1px; overflow: hidden;
+      clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+    .hidden { display: none !important; }
+
+    /* ═══════════════════════════════════════════════════════════════
+       ❹  STICKY HEADER
+          ┌─ Logo image (swap src="logo.png") ──────────────────────┐
+          │  Nav items are driven by the SPA router below           │
+          └─────────────────────────────────────────────────────────┘
+       ═══════════════════════════════════════════════════════════════ */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: var(--header-h);
+      background: var(--color-primary-deep);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      box-shadow: var(--shadow-md);
+      /* micro-texture */
+      background-image:
+        radial-gradient(ellipse at 80% 50%, rgba(36,132,193,.18) 0%, transparent 60%),
+        radial-gradient(ellipse at 10% 80%, rgba(245,197,24,.07) 0%, transparent 50%);
+    }
+
+    .header-inner {
+      max-width: calc(var(--content-max) + var(--sp-8) * 2);
+      margin: 0 auto;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--sp-5);
+      gap: var(--sp-4);
+    }
+
+    /* ── Logo area ──────────────────────────────────────────────── */
+    .logo-link {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-3);
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    /*
+      ▶ SWAP LOGO: Change src="logo.png" in the <img> below.
+        Recommended size: height 36–40px, transparent PNG or SVG.
+        The fallback initials badge shows automatically if the image fails.
+    */
+    .logo-img {
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+      /* hide broken-image icon; fallback badge shows instead */
+      font-size: 0;
+    }
+    .logo-badge {
+      /* fallback when logo.png is missing — remove once real logo loads */
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, var(--color-accent), var(--color-primary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--color-primary-deep);
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(245,197,24,.35);
+    }
+    .logo-text {
+      line-height: 1.15;
+    }
+    .logo-text strong {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--color-accent);
+      letter-spacing: .01em;
+    }
+    .logo-text span {
+      display: block;
+      font-size: .58rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      font-weight: 400;
+    }
+
+    /* ── Desktop navigation ─────────────────────────────────────── */
+    /*
+      ▶ ADD PAGES: Each <button data-view="viewId"> maps to a view
+        registered in the SPA router below. Match the data-view value
+        to the id in VIEWS config in the <script> section.
+    */
+    .header-nav {
+      display: none;          /* hidden on mobile — hamburger takes over */
+      align-items: center;
+      gap: var(--sp-1);
+    }
+    @media (min-width: 768px) {
+      .header-nav { display: flex; }
+    }
+
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-2);
+      min-height: 44px;
+      padding: var(--sp-2) var(--sp-4);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+      font-weight: 500;
+      color: rgba(240,248,255,.65);
+      transition: background var(--dur-fast) var(--ease-out),
+                  color     var(--dur-fast) var(--ease-out);
+      position: relative;
+    }
+    .nav-btn:hover {
+      background: rgba(36,132,193,.18);
+      color: var(--color-cream);
+    }
+    .nav-btn.is-active {
+      color: var(--color-accent);
+      background: rgba(245,197,24,.08);
+    }
+    .nav-btn.is-active::after {
+      content: '';
+      position: absolute;
+      bottom: 4px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 20px;
+      height: 2px;
+      border-radius: var(--radius-pill);
+      background: var(--color-accent);
+    }
+    .nav-btn .nav-icon {
+      font-size: 1rem;
+      line-height: 1;
+    }
+
+    /* ── Header right actions ───────────────────────────────────── */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-3);
+      flex-shrink: 0;
+    }
+
+    /* Primary CTA button */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--sp-2);
+      min-height: 44px;
+      padding: var(--sp-2) var(--sp-5);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      background: var(--color-accent);
+      color: var(--color-primary-deep);
+      box-shadow: 0 2px 8px rgba(245,197,24,.3);
+      transition: background var(--dur-fast) var(--ease-out),
+                  box-shadow  var(--dur-fast) var(--ease-out),
+                  transform   var(--dur-fast) var(--ease-out);
+    }
+    .btn-primary:hover {
+      background: var(--color-accent-light);
+      box-shadow: 0 4px 16px rgba(245,197,24,.45);
+      transform: translateY(-1px);
+    }
+    .btn-primary:active { transform: none; }
+
+    /* Ghost / outline button */
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--sp-2);
+      min-height: 44px;
+      padding: var(--sp-2) var(--sp-4);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: 500;
+      color: var(--color-cream);
+      border: 1px solid rgba(240,248,255,.2);
+      transition: border-color var(--dur-fast), background var(--dur-fast), color var(--dur-fast);
+    }
+    .btn-ghost:hover {
+      background: rgba(240,248,255,.07);
+      border-color: rgba(240,248,255,.4);
+      color: #fff;
+    }
+
+    /* ── Mobile hamburger ───────────────────────────────────────── */
+    .hamburger {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      color: var(--color-accent);
+      font-size: 1.3rem;
+      border: 1px solid rgba(240,248,255,.12);
+      transition: background var(--dur-fast);
+    }
+    .hamburger:hover { background: rgba(36,132,193,.2); }
+    @media (min-width: 768px) { .hamburger { display: none; } }
+
+    /* ── Mobile drawer ──────────────────────────────────────────── */
+    .mobile-drawer {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      pointer-events: none;
+    }
+    .drawer-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(10,45,69,.65);
+      backdrop-filter: blur(3px);
+      opacity: 0;
+      transition: opacity var(--dur-normal) var(--ease-out);
+    }
+    .drawer-panel {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: min(300px, 85vw);
+      background: var(--color-primary-deep);
+      background-image: radial-gradient(ellipse at top right, rgba(36,132,193,.2), transparent 60%);
+      padding: var(--sp-6) var(--sp-5);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-3);
+      transform: translateX(110%);
+      transition: transform var(--dur-normal) var(--ease-out);
+      box-shadow: var(--shadow-lg);
+    }
+    .mobile-drawer.is-open {
+      pointer-events: auto;
+    }
+    .mobile-drawer.is-open .drawer-overlay { opacity: 1; }
+    .mobile-drawer.is-open .drawer-panel { transform: translateX(0); }
+
+    .drawer-close {
+      align-self: flex-end;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-md);
+      color: var(--color-muted);
+      font-size: 1.2rem;
+      margin-bottom: var(--sp-2);
+      transition: color var(--dur-fast), background var(--dur-fast);
+    }
+    .drawer-close:hover { color: var(--color-cream); background: rgba(255,255,255,.06); }
+
+    .drawer-divider {
+      height: 1px;
+      background: rgba(255,255,255,.06);
+      margin: var(--sp-2) 0;
+    }
+    .drawer-label {
+      font-size: var(--text-xs);
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      font-weight: 600;
+      padding: 0 var(--sp-2);
+    }
+    .drawer-nav-btn {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-3);
+      min-height: 52px;
+      padding: var(--sp-3) var(--sp-3);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: 500;
+      color: rgba(240,248,255,.7);
+      transition: background var(--dur-fast), color var(--dur-fast);
+      width: 100%;
+      text-align: left;
+    }
+    .drawer-nav-btn:hover {
+      background: rgba(36,132,193,.18);
+      color: var(--color-cream);
+    }
+    .drawer-nav-btn.is-active {
+      color: var(--color-accent);
+      background: rgba(245,197,24,.08);
+    }
+    .drawer-nav-btn .nav-icon { font-size: 1.1rem; }
+
+    /* ═══════════════════════════════════════════════════════════════
+       ❺  MAIN CONTENT WRAPPER
+       ═══════════════════════════════════════════════════════════════ */
+    .app-main {
+      flex: 1 1 auto;
+      width: 100%;
+    }
+
+    .content-shell {
+      max-width: calc(var(--content-max) + var(--sp-8) * 2);
+      margin: 0 auto;
+      padding: var(--sp-8) var(--sp-5) var(--sp-12);
+    }
+
+    /* ── View transition animation ─────────────────────────────── */
+    /*
+      Each "page" fades in when navigated to.
+      Views are shown/hidden via JS — see SPA Router below.
+    */
+    .view {
+      display: none;
+      animation: viewIn var(--view-fade-dur) var(--ease-out) both;
+    }
+    .view.is-active { display: block; }
+
+    @keyframes viewIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       ❻  PAGE HERO SECTION
+       ═══════════════════════════════════════════════════════════════ */
+    .page-hero {
+      background: linear-gradient(135deg, var(--color-primary-deep) 0%, var(--color-primary-dark) 100%);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-8) var(--sp-6);
+      margin-bottom: var(--sp-8);
+      position: relative;
+      overflow: hidden;
+    }
+    /* Decorative radial glow */
+    .page-hero::before {
+      content: '';
+      position: absolute;
+      right: -80px; top: -80px;
+      width: 360px; height: 360px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(245,197,24,.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    /* Gold underline bar */
+    .page-hero::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--color-accent), var(--color-primary-light), transparent);
+    }
+    .page-hero .eyebrow {
+      font-size: var(--text-xs);
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--color-accent);
+      font-weight: 600;
+      margin-bottom: var(--sp-3);
+    }
+    .page-hero h1 {
+      font-family: var(--font-display);
+      font-size: var(--text-4xl);
+      font-weight: 300;
+      color: var(--color-cream);
+      line-height: 1.1;
+      margin-bottom: var(--sp-4);
+    }
+    .page-hero h1 em {
+      font-style: italic;
+      color: var(--color-accent-light);
+    }
+    .page-hero p {
+      color: rgba(240,248,255,.65);
+      font-size: .95rem;
+      max-width: 520px;
+      line-height: 1.75;
+    }
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sp-2);
+      margin-top: var(--sp-5);
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: var(--sp-1) var(--sp-3);
+      border-radius: var(--radius-pill);
+      font-size: var(--text-xs);
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .badge-blue   { background: rgba(36,132,193,.2);  color: var(--color-primary-light); border: 1px solid rgba(36,132,193,.3); }
+    .badge-yellow { background: rgba(245,197,24,.15); color: var(--color-accent);         border: 1px solid rgba(245,197,24,.28); }
+    .badge-green  { background: rgba(22,163,74,.12);  color: #4ade80;                     border: 1px solid rgba(22,163,74,.25); }
+
+    @media (min-width: 768px) {
+      .page-hero { padding: var(--sp-10) var(--sp-8); }
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       ❼  COMPONENT LIBRARY
+       ═══════════════════════════════════════════════════════════════ */
+
+    /* ── Section heading ──────────────────────────────────────── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-4);
+      margin-bottom: var(--sp-5);
+      flex-wrap: wrap;
+    }
+    .step-badge {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: .9rem;
+      color: var(--color-accent);
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(36,132,193,.3);
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.3rem, 3vw, 1.9rem);
+      font-weight: 600;
+      color: var(--color-primary-dark);
+    }
+
+    /* ── Card ─────────────────────────────────────────────────── */
+    .card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-6);
+      box-shadow: var(--shadow-xs);
+      transition: box-shadow var(--dur-normal) var(--ease-out),
+                  transform  var(--dur-normal) var(--ease-out),
+                  border-color var(--dur-normal);
+    }
+    .card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+      border-color: rgba(36,132,193,.32);
+    }
+    .card-icon {
+      font-size: 1.75rem;
+      margin-bottom: var(--sp-4);
+      line-height: 1;
+    }
+    .card-title {
+      font-size: var(--text-sm);
+      font-weight: 700;
+      color: var(--color-primary-dark);
+      margin-bottom: var(--sp-2);
+    }
+    .card-body {
+      font-size: .83rem;
+      color: var(--color-text-soft);
+      line-height: 1.65;
+    }
+    .card-tag {
+      display: inline-flex;
+      margin-top: var(--sp-4);
+      font-size: .68rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      font-weight: 600;
+    }
+
+    /* ── Info box ─────────────────────────────────────────────── */
+    .info-box {
+      display: flex;
+      gap: var(--sp-4);
+      align-items: flex-start;
+      border-radius: var(--radius-md);
+      padding: var(--sp-4) var(--sp-5);
+      margin: var(--sp-5) 0;
+    }
+    .info-box.tip     { background: #EBF8FF; border-left: 3px solid var(--color-primary); }
+    .info-box.warn    { background: #FFFBEB; border-left: 3px solid #D97706; }
+    .info-box.success { background: #F0FDF4; border-left: 3px solid #16A34A; }
+    .info-box.danger  { background: #FEF2F2; border-left: 3px solid #DC2626; }
+    .info-box-icon    { font-size: 1.1rem; flex-shrink: 0; margin-top: .1rem; }
+    .info-box-text    { font-size: var(--text-sm); color: #374151; line-height: 1.7; }
+    .info-box-text strong { color: #111827; }
+
+    /* ── Stats / KPI strip ────────────────────────────────────── */
+    .stats-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: var(--sp-4);
+      margin: var(--sp-6) 0;
+    }
+    .stat-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--sp-5) var(--sp-4);
+      text-align: center;
+      box-shadow: var(--shadow-xs);
+    }
+    .stat-value {
+      font-family: var(--font-display);
+      font-size: var(--text-3xl);
+      font-weight: 700;
+      color: var(--color-primary-dark);
+      line-height: 1;
+      margin-bottom: var(--sp-2);
+    }
+    .stat-label {
+      font-size: var(--text-xs);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      font-weight: 600;
+    }
+    .stat-delta {
+      font-size: var(--text-xs);
+      margin-top: var(--sp-1);
+      font-weight: 600;
+    }
+    .stat-delta.up   { color: #16A34A; }
+    .stat-delta.down { color: #DC2626; }
+
+    /* ── Form elements ────────────────────────────────────────── */
+    .form-group { display: flex; flex-direction: column; gap: var(--sp-2); }
+    .form-label {
+      font-size: var(--text-sm);
+      font-weight: 600;
+      color: var(--color-primary-dark);
+    }
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      min-height: 44px;
+      padding: var(--sp-2) var(--sp-4);
+      border: 1px solid #CBD5E1;
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: var(--text-sm);
+      color: var(--color-text);
+      background: var(--color-surface);
+      transition: border-color var(--dur-fast), box-shadow var(--dur-fast);
+      outline: none;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(36,132,193,.15);
+    }
+    .form-textarea { min-height: 110px; resize: vertical; }
+    .form-hint { font-size: var(--text-xs); color: var(--color-muted); }
+
+    /* ── Button variants ──────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: var(--sp-2);
+      min-height: 44px;
+      padding: var(--sp-2) var(--sp-5);
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all var(--dur-fast) var(--ease-out);
+    }
+    .btn-accent {
+      background: var(--color-accent);
+      color: var(--color-primary-deep);
+      box-shadow: 0 2px 8px rgba(245,197,24,.3);
+    }
+    .btn-accent:hover {
+      background: var(--color-accent-light);
+      box-shadow: 0 4px 16px rgba(245,197,24,.45);
+      transform: translateY(-1px);
+    }
+    .btn-blue {
+      background: var(--color-primary);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(36,132,193,.25);
+    }
+    .btn-blue:hover {
+      background: var(--color-primary-light);
+      transform: translateY(-1px);
+    }
+    .btn-outline {
+      background: transparent;
+      color: var(--color-primary);
+      border: 1.5px solid var(--color-primary);
+    }
+    .btn-outline:hover {
+      background: rgba(36,132,193,.07);
+    }
+    .btn-sm { min-height: 36px; padding: var(--sp-1) var(--sp-4); font-size: var(--text-xs); }
+    .btn-lg { min-height: 52px; padding: var(--sp-3) var(--sp-8); font-size: var(--text-base); }
+
+    /* ── Divider ──────────────────────────────────────────────── */
+    .divider { border: none; border-top: 1px solid #E5EDF5; margin: var(--sp-8) 0; }
+
+    /* ── Callout / highlight box ──────────────────────────────── */
+    .callout {
+      background: linear-gradient(135deg, rgba(36,132,193,.06), rgba(36,132,193,.02));
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--sp-5) var(--sp-6);
+      margin: var(--sp-6) 0;
+    }
+    .callout-title { font-size: var(--text-base); font-weight: 700; color: var(--color-primary-dark); margin-bottom: var(--sp-2); }
+    .callout-body  { font-size: var(--text-sm); color: #374151; line-height: 1.7; }
+
+    /* ── Table ────────────────────────────────────────────────── */
+    .table-wrap { overflow-x: auto; border-radius: var(--radius-md); }
+    .data-table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); min-width: 460px; }
+    .data-table th {
+      background: var(--color-primary-dark);
+      color: var(--color-cream);
+      padding: var(--sp-3) var(--sp-4);
+      text-align: left;
+      font-size: var(--text-xs);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .data-table th:first-child { border-radius: var(--radius-sm) 0 0 0; }
+    .data-table th:last-child  { border-radius: 0 var(--radius-sm) 0 0; }
+    .data-table td { padding: var(--sp-3) var(--sp-4); border-bottom: 1px solid #E5EDF5; color: #374151; vertical-align: top; }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:nth-child(even) td { background: #F8FAFC; }
+    .data-table tr:hover td { background: #EFF6FF; }
+
+    /* ── Progress bar ─────────────────────────────────────────── */
+    .progress { height: 8px; background: #E5EDF5; border-radius: var(--radius-pill); overflow: hidden; }
+    .progress-fill {
+      height: 100%;
+      border-radius: var(--radius-pill);
+      background: linear-gradient(90deg, var(--color-primary), var(--color-primary-light));
+      transition: width var(--dur-slow) var(--ease-out);
+    }
+
+    /* ── Toast / notification ─────────────────────────────────── */
+    .toast-stack {
+      position: fixed;
+      bottom: var(--sp-6);
+      right: var(--sp-5);
+      z-index: 500;
+      display: flex;
+      flex-direction: column-reverse;
+      gap: var(--sp-3);
+      pointer-events: none;
+    }
+    .toast {
+      background: var(--color-primary-deep);
+      color: var(--color-cream);
+      border-left: 3px solid var(--color-accent);
+      border-radius: var(--radius-md);
+      padding: var(--sp-3) var(--sp-5);
+      font-size: var(--text-sm);
+      box-shadow: var(--shadow-lg);
+      pointer-events: auto;
+      max-width: 320px;
+      animation: toastIn var(--dur-normal) var(--ease-out) both,
+                 toastOut var(--dur-normal) var(--ease-out) 2.8s both;
+    }
+    @keyframes toastIn  { from { opacity:0; transform:translateX(32px); } to { opacity:1; transform:none; } }
+    @keyframes toastOut { from { opacity:1; } to { opacity:0; transform:translateX(32px); } }
+
+    /* ── Loading skeleton ─────────────────────────────────────── */
+    .skeleton {
+      border-radius: var(--radius-sm);
+      background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+    }
+    @keyframes shimmer { to { background-position: -200% 0; } }
+
+    /* ═══════════════════════════════════════════════════════════════
+       ❽  FOOTER
+       ═══════════════════════════════════════════════════════════════ */
+    .app-footer {
+      background: var(--color-primary-deep);
+      border-top: 1px solid rgba(255,255,255,.05);
+      padding: var(--sp-6) var(--sp-5);
+      margin-top: auto;
+    }
+    .footer-inner {
+      max-width: calc(var(--content-max) + var(--sp-8) * 2);
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--sp-4);
+      text-align: center;
+    }
+    @media (min-width: 640px) {
+      .footer-inner {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+      }
+    }
+    .footer-logo { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--color-accent); }
+    .footer-copy { font-size: var(--text-xs); color: var(--color-muted); }
+    .footer-links { display: flex; gap: var(--sp-5); }
+    .footer-links a { font-size: var(--text-xs); color: var(--color-muted); transition: color var(--dur-fast); }
+    .footer-links a:hover { color: var(--color-accent); }
+
+    /* ═══════════════════════════════════════════════════════════════
+       ❾  RESPONSIVE HELPERS
+       ═══════════════════════════════════════════════════════════════ */
+    @media (max-width: 639px) {
+      .hide-mobile { display: none !important; }
+    }
+    @media (min-width: 640px) {
+      .hide-desktop { display: none !important; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       STICKY HEADER
+       ══════════════════════════════════════════════════════════════ -->
+  <header class="app-header" role="banner">
+    <div class="header-inner">
+
+      <!-- ── Logo ───────────────────────────────────────────────
+           ▶ SWAP LOGO: Change src="logo.png" to your actual asset path.
+              If the image fails to load, the .logo-badge initials show
+              automatically via CSS (font-size:0 hides the broken icon).
+           ─────────────────────────────────────────────────────── -->
+      <a href="#" class="logo-link" data-view="home" aria-label="DBDNJ — Go to Home">
+        <!--
+          Option A: Real logo image (recommended for production)
+          <img src="logo.png" alt="DBDNJ Logo" class="logo-img" />
+        -->
+        <!-- Option B: Initials badge fallback (remove when real logo is ready) -->
+        <div class="logo-badge" aria-hidden="true">DB</div>
+        <div class="logo-text">
+          <strong>DBDNJ</strong>
+          <span>Ministry Platform</span>
+        </div>
+      </a>
+
+      <!-- ── Desktop Navigation ─────────────────────────────────
+           ▶ ADD PAGE: Duplicate a <button class="nav-btn"> and set
+              data-view="yourViewId" — then register the same id in
+              VIEWS config inside the <script> section below.
+           ─────────────────────────────────────────────────────── -->
+      <nav class="header-nav" role="navigation" aria-label="Primary navigation">
+        <button class="nav-btn is-active" data-view="home">
+          <span class="nav-icon" aria-hidden="true">🏠</span> Home
+        </button>
+        <button class="nav-btn" data-view="dashboard">
+          <span class="nav-icon" aria-hidden="true">📊</span> Dashboard
+        </button>
+        <button class="nav-btn" data-view="components">
+          <span class="nav-icon" aria-hidden="true">🧩</span> Components
+        </button>
+        <button class="nav-btn" data-view="forms">
+          <span class="nav-icon" aria-hidden="true">📝</span> Forms
+        </button>
+        <button class="nav-btn" data-view="about">
+          <span class="nav-icon" aria-hidden="true">✦</span> About
+        </button>
+      </nav>
+
+      <!-- ── Right actions ──────────────────────────────────────── -->
+      <div class="header-actions">
+        <button class="btn-primary hide-mobile" id="ctaBtn" aria-label="Give online">
+          ✦ Give
+        </button>
+        <!-- Hamburger: mobile only -->
+        <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileDrawer">
+          ☰
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       MOBILE DRAWER
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="mobile-drawer" id="mobileDrawer" role="dialog" aria-modal="true" aria-label="Navigation menu">
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+    <div class="drawer-panel">
+      <button class="drawer-close" id="drawerClose" aria-label="Close menu">✕</button>
+      <div class="drawer-label">Navigation</div>
+      <!-- Mirror of header nav — same data-view values -->
+      <button class="drawer-nav-btn is-active" data-view="home">
+        <span class="nav-icon">🏠</span> Home
+      </button>
+      <button class="drawer-nav-btn" data-view="dashboard">
+        <span class="nav-icon">📊</span> Dashboard
+      </button>
+      <button class="drawer-nav-btn" data-view="components">
+        <span class="nav-icon">🧩</span> Components
+      </button>
+      <button class="drawer-nav-btn" data-view="forms">
+        <span class="nav-icon">📝</span> Forms
+      </button>
+      <button class="drawer-nav-btn" data-view="about">
+        <span class="nav-icon">✦</span> About
+      </button>
+      <div class="drawer-divider"></div>
+      <button class="btn btn-accent" style="width:100%" id="drawerCta">✦ Give Now</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       MAIN CONTENT — SPA view container
+       Each .view block is a "page". Only the .is-active one renders.
+       ══════════════════════════════════════════════════════════════ -->
+  <main class="app-main" id="appMain" aria-live="polite">
+    <div class="content-shell">
+
+      <!-- ────────────────────────────────────────────────────────
+           VIEW: HOME
+           ▶ ADD PAGE: Copy this block, give it a unique id,
+             add the same id to VIEWS in the script below,
+             and add a <button data-view="yourId"> to the nav.
+           ──────────────────────────────────────────────────────── -->
+      <section class="view is-active" id="view-home" aria-label="Home page">
+
+        <div class="page-hero">
+          <p class="eyebrow">Microsoft 365 · Ministry Platform</p>
+          <h1>Your Ministry,<br><em>Beautifully Branded</em></h1>
+          <p>A production-ready SPA boilerplate powered by the DBDNJ design system — consistent colors, typography, spacing, and components across every view.</p>
+          <div class="badge-row">
+            <span class="badge badge-blue">Mobile-First</span>
+            <span class="badge badge-yellow">Design System</span>
+            <span class="badge badge-blue">SPA Router</span>
+            <span class="badge badge-green">Accessible</span>
+          </div>
+        </div>
+
+        <div class="section-header">
+          <div class="step-badge" aria-hidden="true">★</div>
+          <h2 class="section-title">What's Included</h2>
+        </div>
+
+        <div class="grid-3">
+          <div class="card">
+            <div class="card-icon">🎨</div>
+            <div class="card-title">Full Design System</div>
+            <p class="card-body">CSS variables for every color, font, spacing token, shadow, and transition. Edit once in <code>:root</code> to retheme globally.</p>
+            <span class="card-tag">:root variables</span>
+          </div>
+          <div class="card">
+            <div class="card-icon">📐</div>
+            <div class="card-title">Utility-First CSS</div>
+            <p class="card-body">Spacing, flex, grid, and typography helpers that eliminate one-off style rules and keep your markup readable.</p>
+            <span class="card-tag">Utility classes</span>
+          </div>
+          <div class="card">
+            <div class="card-icon">🔀</div>
+            <div class="card-title">SPA View Router</div>
+            <p class="card-body">Instant client-side navigation with fade animation, active-state tracking, and browser history support — no framework needed.</p>
+            <span class="card-tag">Vanilla JS</span>
+          </div>
+          <div class="card">
+            <div class="card-icon">📱</div>
+            <div class="card-title">Responsive Layout</div>
+            <p class="card-body">Mobile-first header, hamburger drawer, responsive grids, and fluid typography scale from 320 px to 1440 px.</p>
+            <span class="card-tag">min-width breakpoints</span>
+          </div>
+          <div class="card">
+            <div class="card-icon">♿</div>
+            <div class="card-title">Accessibility Built-in</div>
+            <p class="card-body">ARIA roles, focus-visible rings, 44 px touch targets, skip-to-content, and live region on the view container.</p>
+            <span class="card-tag">WCAG 2.1 AA</span>
+          </div>
+          <div class="card">
+            <div class="card-icon">🧩</div>
+            <div class="card-title">Component Library</div>
+            <p class="card-body">Cards, info boxes, badges, stats, tables, progress bars, toasts, skeletons, and forms — all styled and documented.</p>
+            <span class="card-tag">Copy & paste</span>
+          </div>
+        </div>
+
+        <div class="callout">
+          <div class="callout-title">💡 Getting Started</div>
+          <p class="callout-body">Use the top navigation to explore each view. Open DevTools to inspect the CSS variables in <code>:root</code>. The SPA Router script is at the bottom of this file — scroll down and read the inline comments to add your first new page.</p>
+        </div>
+
+      </section><!-- /view-home -->
+
+
+      <!-- ────────────────────────────────────────────────────────
+           VIEW: DASHBOARD
+           ──────────────────────────────────────────────────────── -->
+      <section class="view" id="view-dashboard" aria-label="Dashboard page">
+
+        <div class="page-hero">
+          <p class="eyebrow">Analytics · Overview</p>
+          <h1>Ministry <em>Dashboard</em></h1>
+          <p>Live snapshot of congregation activity, giving trends, and event attendance at a glance.</p>
+        </div>
+
+        <!-- KPI Strip -->
+        <div class="stats-strip">
+          <div class="stat-card">
+            <div class="stat-value">1,247</div>
+            <div class="stat-label">Congregation</div>
+            <div class="stat-delta up">↑ 8.3% this month</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">$42K</div>
+            <div class="stat-label">Monthly Giving</div>
+            <div class="stat-delta up">↑ 12% vs last month</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">94%</div>
+            <div class="stat-label">Attendance Rate</div>
+            <div class="stat-delta down">↓ 1.2% vs last week</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">18</div>
+            <div class="stat-label">Active Ministries</div>
+            <div class="stat-delta up">↑ 2 new this quarter</div>
+          </div>
+        </div>
+
+        <!-- Progress goals -->
+        <div class="section-header mt-8">
+          <div class="step-badge">📈</div>
+          <h2 class="section-title">Annual Goals</h2>
+        </div>
+
+        <div class="surface p-6">
+          <div class="flex-col gap-6">
+            <div>
+              <div class="flex justify-between mb-2">
+                <span class="text-sm font-semibold" style="color:var(--color-primary-dark)">Building Fund</span>
+                <span class="text-sm text-soft">$84,000 / $120,000</span>
+              </div>
+              <div class="progress"><div class="progress-fill" style="width:70%"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between mb-2">
+                <span class="text-sm font-semibold" style="color:var(--color-primary-dark)">Mission Trips</span>
+                <span class="text-sm text-soft">$12,500 / $20,000</span>
+              </div>
+              <div class="progress"><div class="progress-fill" style="width:63%; background:linear-gradient(90deg,var(--color-accent),var(--color-accent-light))"></div></div>
+            </div>
+            <div>
+              <div class="flex justify-between mb-2">
+                <span class="text-sm font-semibold" style="color:var(--color-primary-dark)">Youth Programs</span>
+                <span class="text-sm text-soft">$8,200 / $15,000</span>
+              </div>
+              <div class="progress"><div class="progress-fill" style="width:55%; background:linear-gradient(90deg,#16A34A,#4ade80)"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Activity table -->
+        <div class="section-header mt-8">
+          <div class="step-badge">📋</div>
+          <h2 class="section-title">Recent Activity</h2>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Event</th>
+                <th>Date</th>
+                <th>Attendance</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Sunday Worship Service</td><td>Feb 23, 2025</td><td>312</td><td><span class="badge badge-green">Completed</span></td></tr>
+              <tr><td>Youth Bible Study</td><td>Feb 21, 2025</td><td>47</td><td><span class="badge badge-green">Completed</span></td></tr>
+              <tr><td>Community Outreach</td><td>Mar 1, 2025</td><td>—</td><td><span class="badge badge-yellow">Upcoming</span></td></tr>
+              <tr><td>Leadership Retreat</td><td>Mar 8, 2025</td><td>—</td><td><span class="badge badge-yellow">Upcoming</span></td></tr>
+              <tr><td>Easter Service</td><td>Apr 20, 2025</td><td>—</td><td><span class="badge badge-blue">Planned</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+      </section><!-- /view-dashboard -->
+
+
+      <!-- ────────────────────────────────────────────────────────
+           VIEW: COMPONENTS
+           ──────────────────────────────────────────────────────── -->
+      <section class="view" id="view-components" aria-label="Components page">
+
+        <div class="page-hero">
+          <p class="eyebrow">Design System · UI Kit</p>
+          <h1>Component <em>Library</em></h1>
+          <p>Copy any component below directly into your SPA views. All styles are driven by CSS variables — they adapt automatically when you update the design tokens.</p>
+        </div>
+
+        <!-- Badges -->
+        <div class="section-header">
+          <div class="step-badge">🏷</div>
+          <h2 class="section-title">Badges & Status</h2>
+        </div>
+        <div class="flex flex-wrap gap-3 mb-8">
+          <span class="badge badge-blue">SharePoint</span>
+          <span class="badge badge-yellow">Gold Accent</span>
+          <span class="badge badge-green">Active</span>
+          <span class="badge" style="background:rgba(220,38,38,.1);color:#DC2626;border:1px solid rgba(220,38,38,.25)">Error</span>
+        </div>
+
+        <!-- Buttons -->
+        <div class="section-header">
+          <div class="step-badge">🔘</div>
+          <h2 class="section-title">Buttons</h2>
+        </div>
+        <div class="flex flex-wrap gap-3 mb-8">
+          <button class="btn btn-accent" onclick="showToast('Accent button clicked!')">Accent</button>
+          <button class="btn btn-blue">Primary Blue</button>
+          <button class="btn btn-outline">Outline</button>
+          <button class="btn btn-accent btn-sm">Small Accent</button>
+          <button class="btn btn-blue btn-lg">Large Blue</button>
+        </div>
+
+        <!-- Info boxes -->
+        <div class="section-header">
+          <div class="step-badge">ℹ</div>
+          <h2 class="section-title">Info Boxes</h2>
+        </div>
+        <div class="info-box tip">
+          <div class="info-box-icon">💡</div>
+          <div class="info-box-text"><strong>Tip:</strong> Use info boxes to highlight important notes, tips, and warnings throughout your content.</div>
+        </div>
+        <div class="info-box warn">
+          <div class="info-box-icon">⚠️</div>
+          <div class="info-box-text"><strong>Warning:</strong> This action requires Site Owner permission in SharePoint Admin Center.</div>
+        </div>
+        <div class="info-box success">
+          <div class="info-box-icon">✅</div>
+          <div class="info-box-text"><strong>Success:</strong> Your theme has been applied successfully across all site pages.</div>
+        </div>
+        <div class="info-box danger mb-8">
+          <div class="info-box-icon">🚫</div>
+          <div class="info-box-text"><strong>Error:</strong> Failed to connect — check your Microsoft 365 credentials and try again.</div>
+        </div>
+
+        <!-- Skeleton loaders -->
+        <div class="section-header">
+          <div class="step-badge">⏳</div>
+          <h2 class="section-title">Skeleton Loaders</h2>
+        </div>
+        <div class="surface p-6 mb-8" style="max-width:400px">
+          <div class="skeleton" style="height:14px;width:55%;margin-bottom:12px"></div>
+          <div class="skeleton" style="height:10px;width:90%;margin-bottom:8px"></div>
+          <div class="skeleton" style="height:10px;width:80%;margin-bottom:8px"></div>
+          <div class="skeleton" style="height:10px;width:65%;margin-bottom:20px"></div>
+          <div class="skeleton" style="height:34px;width:120px;border-radius:8px"></div>
+        </div>
+
+        <!-- Toast demo -->
+        <div class="section-header">
+          <div class="step-badge">🔔</div>
+          <h2 class="section-title">Toast Notifications</h2>
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <button class="btn btn-accent" onclick="showToast('✅ Action completed successfully!')">Show Toast</button>
+          <button class="btn btn-outline" onclick="showToast('📋 Copied to clipboard')">Copy Toast</button>
+        </div>
+
+      </section><!-- /view-components -->
+
+
+      <!-- ────────────────────────────────────────────────────────
+           VIEW: FORMS
+           ──────────────────────────────────────────────────────── -->
+      <section class="view" id="view-forms" aria-label="Forms page">
+
+        <div class="page-hero">
+          <p class="eyebrow">Data Collection · Inputs</p>
+          <h1>Form <em>Components</em></h1>
+          <p>Accessible, touch-friendly form elements with consistent styling driven by design tokens.</p>
+        </div>
+
+        <div class="grid-2" style="gap:var(--sp-8)">
+
+          <!-- Contact form -->
+          <div class="surface p-6">
+            <h3 class="font-display text-xl font-semibold mb-6" style="color:var(--color-primary-dark)">Contact the Ministry</h3>
+            <div class="flex-col gap-4">
+              <div class="form-group">
+                <label class="form-label" for="inputName">Full Name</label>
+                <input class="form-input" id="inputName" type="text" placeholder="John Doe" autocomplete="name" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="inputEmail">Email Address</label>
+                <input class="form-input" id="inputEmail" type="email" placeholder="you@example.com" autocomplete="email" />
+                <span class="form-hint">We'll never share your email.</span>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="selectSubject">Subject</label>
+                <select class="form-select" id="selectSubject">
+                  <option value="">Select a topic…</option>
+                  <option>General Inquiry</option>
+                  <option>Giving & Donations</option>
+                  <option>Events & Programs</option>
+                  <option>Prayer Request</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="inputMessage">Message</label>
+                <textarea class="form-textarea" id="inputMessage" placeholder="How can we help you?"></textarea>
+              </div>
+              <button class="btn btn-accent" type="button" onclick="showToast('✉️ Message sent! We\'ll respond within 24 hours.')">
+                Send Message
+              </button>
+            </div>
+          </div>
+
+          <!-- Giving form -->
+          <div class="surface p-6">
+            <h3 class="font-display text-xl font-semibold mb-6" style="color:var(--color-primary-dark)">Online Giving</h3>
+            <div class="flex-col gap-4">
+              <div class="form-group">
+                <label class="form-label" for="giveAmount">Giving Amount</label>
+                <div class="flex gap-2 flex-wrap">
+                  <button class="btn btn-outline btn-sm" onclick="setAmount(25)">$25</button>
+                  <button class="btn btn-outline btn-sm" onclick="setAmount(50)">$50</button>
+                  <button class="btn btn-outline btn-sm" onclick="setAmount(100)">$100</button>
+                  <button class="btn btn-outline btn-sm" onclick="setAmount(250)">$250</button>
+                </div>
+                <input class="form-input mt-2" id="giveAmount" type="number" placeholder="Custom amount ($)" min="1" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="giveFreq">Frequency</label>
+                <select class="form-select" id="giveFreq">
+                  <option>One-time</option>
+                  <option>Weekly</option>
+                  <option>Monthly</option>
+                  <option>Annually</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="giveFund">Designate to Fund</label>
+                <select class="form-select" id="giveFund">
+                  <option>General Fund</option>
+                  <option>Building Fund</option>
+                  <option>Mission Trips</option>
+                  <option>Youth Programs</option>
+                </select>
+              </div>
+              <div class="info-box tip">
+                <div class="info-box-icon">🔒</div>
+                <div class="info-box-text"><strong>Secure:</strong> Payments are processed via Stripe with 256-bit SSL encryption.</div>
+              </div>
+              <button class="btn btn-accent btn-lg" style="width:100%" type="button" onclick="showToast('🙏 Thank you for your generosity!')">
+                ✦ Give Now
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </section><!-- /view-forms -->
+
+
+      <!-- ────────────────────────────────────────────────────────
+           VIEW: ABOUT
+           ──────────────────────────────────────────────────────── -->
+      <section class="view" id="view-about" aria-label="About page">
+
+        <div class="page-hero">
+          <p class="eyebrow">Our Story · DBDNJ</p>
+          <h1>Day by Day<br><em>Christian Ministries</em></h1>
+          <p>Serving the Bayonne, NJ community with resilient discipleship, outreach, and worship every Sunday at 10:30 AM Eastern.</p>
+          <div class="badge-row">
+            <span class="badge badge-yellow">Since 1998</span>
+            <span class="badge badge-blue">Bayonne, NJ</span>
+            <span class="badge badge-blue">182 Ave E</span>
+          </div>
+        </div>
+
+        <div class="section-header">
+          <div class="step-badge">🔥</div>
+          <h2 class="section-title">Our Three Pillars</h2>
+        </div>
+
+        <div class="grid-3 mb-8">
+          <div class="card surface-dark p-6" style="background:linear-gradient(135deg,var(--color-primary-deep),var(--color-primary-dark));border:1px solid rgba(245,197,24,.2)">
+            <div class="card-icon">⚓</div>
+            <div class="card-title" style="color:var(--color-accent)">Missions</div>
+            <p style="font-size:.83rem;color:rgba(240,248,255,.65);line-height:1.65">Reaching the unreached with the Gospel through local and international mission work.</p>
+          </div>
+          <div class="card surface-dark p-6" style="background:linear-gradient(135deg,var(--color-primary-deep),var(--color-primary-dark));border:1px solid rgba(245,197,24,.2)">
+            <div class="card-icon">🤝</div>
+            <div class="card-title" style="color:var(--color-accent)">Community</div>
+            <p style="font-size:.83rem;color:rgba(240,248,255,.65);line-height:1.65">Building authentic relationships through groups, discipleship, and service to our neighbors.</p>
+          </div>
+          <div class="card surface-dark p-6" style="background:linear-gradient(135deg,var(--color-primary-deep),var(--color-primary-dark));border:1px solid rgba(245,197,24,.2)">
+            <div class="card-icon">💰</div>
+            <div class="card-title" style="color:var(--color-accent)">Generosity</div>
+            <p style="font-size:.83rem;color:rgba(240,248,255,.65);line-height:1.65">Honoring God through faithful stewardship of time, talent, and treasure.</p>
+          </div>
+        </div>
+
+        <div class="callout">
+          <div class="callout-title">📍 Join Us Sunday</div>
+          <p class="callout-body"><strong>Day by Day Christian Ministries</strong> · 182 Ave E, Bayonne NJ 07002 · Sunday Worship at <strong>10:30 AM Eastern</strong>. All are welcome. Follow us on Facebook, Instagram, YouTube, and TikTok.</p>
+        </div>
+
+        <div class="section-header mt-8">
+          <div class="step-badge">🛠</div>
+          <h2 class="section-title">About This Boilerplate</h2>
+        </div>
+        <div class="info-box tip">
+          <div class="info-box-icon">💡</div>
+          <div class="info-box-text">
+            <strong>Design tokens:</strong> All colors, fonts, spacing, and transitions live in <code>:root</code> at the top of the <code>&lt;style&gt;</code> block. Change them once — every component updates globally.<br /><br />
+            <strong>Add a page:</strong> (1) Copy a <code>&lt;section class="view"&gt;</code> block, give it a unique <code>id="view-yourId"</code>. (2) Add <code>{ id: 'yourId', label: 'Your Page', icon: '🆕' }</code> to the <code>VIEWS</code> array in the script. (3) The router auto-creates nav buttons — or add them manually to match.
+          </div>
+        </div>
+
+      </section><!-- /view-about -->
+
+    </div><!-- /content-shell -->
+  </main>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       TOAST STACK — rendered by JS
+       ══════════════════════════════════════════════════════════════ -->
+  <div class="toast-stack" id="toastStack" aria-live="polite" aria-atomic="false"></div>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       FOOTER
+       ══════════════════════════════════════════════════════════════ -->
+  <footer class="app-footer" role="contentinfo">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-logo">DBDNJ Ministry Platform</div>
+        <p class="footer-copy mt-2">Day by Day Christian Ministries · Bayonne, NJ 07002</p>
+      </div>
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="#" data-view="home">Home</a>
+        <a href="#" data-view="about">About</a>
+        <a href="#" data-view="forms">Give</a>
+      </nav>
+    </div>
+  </footer>
+
+
+  <!-- ══════════════════════════════════════════════════════════════
+       SPA ROUTER — Vanilla JavaScript
+       ══════════════════════════════════════════════════════════════
+
+   HOW IT WORKS
+   ─────────────────────────────────────────────────────────────────
+   1. VIEWS array defines every page.
+   2. navigateTo(viewId) shows the matching .view section and
+      updates all nav buttons to reflect the active state.
+   3. History API (pushState / popstate) keeps the back button working.
+   4. Any element with [data-view] triggers navigation on click —
+      this covers header nav, mobile drawer, logo link, and footer.
+
+   ADD A NEW PAGE — 3 steps
+   ─────────────────────────────────────────────────────────────────
+   Step 1 › Add to VIEWS array:
+              { id: 'media', label: 'Media', icon: '🎬' }
+
+   Step 2 › Add a <section class="view" id="view-media"> block
+              in the #appMain content-shell above.
+
+   Step 3 › Optionally add a manual nav button in the header:
+              <button class="nav-btn" data-view="media">
+                <span class="nav-icon">🎬</span> Media
+              </button>
+              (Or remove the nav-btn altogether — the router
+               handles navigation from any [data-view] element.)
+   ══════════════════════════════════════════════════════════════ -->
+  <script>
+    'use strict';
+
+    /* ── ❶  VIEWS CONFIG ─────────────────────────────────────────
+       Register every SPA page here. The router uses this to:
+       • validate incoming view IDs  
+       • update document.title  
+       • sync active state on all nav buttons
+    ──────────────────────────────────────────────────────────── */
+    const VIEWS = [
+      { id: 'home',        label: 'Home',        icon: '🏠' },
+      { id: 'dashboard',  label: 'Dashboard',   icon: '📊' },
+      { id: 'components', label: 'Components',  icon: '🧩' },
+      { id: 'forms',      label: 'Forms',        icon: '📝' },
+      { id: 'about',      label: 'About',        icon: '✦'  },
+      /*
+        ▶ ADD PAGE: append a new object here, e.g.:
+        { id: 'media', label: 'Media', icon: '🎬' },
+      */
+    ];
+
+    const APP_TITLE = 'DBDNJ Ministry Platform';
+
+    /* ── ❷  CORE ROUTER ──────────────────────────────────────────
+       navigateTo(viewId, pushState = true)
+         - Shows the target view, hides all others
+         - Updates all [data-view=viewId] buttons → is-active
+         - Optionally pushes to browser history
+         - Scrolls content to top
+    ──────────────────────────────────────────────────────────── */
+    function navigateTo(viewId, pushState = true) {
+      // Validate — fall back to 'home' for unknown ids
+      const view = VIEWS.find(v => v.id === viewId) || VIEWS[0];
+      const targetId = view.id;
+
+      /* Hide all views, activate the target */
+      document.querySelectorAll('.view').forEach(el => {
+        const match = el.id === `view-${targetId}`;
+        el.classList.toggle('is-active', match);
+      });
+
+      /* Sync ALL nav buttons (header + drawer + footer) */
+      document.querySelectorAll('[data-view]').forEach(btn => {
+        btn.classList.toggle('is-active', btn.dataset.view === targetId);
+      });
+
+      /* Update page title */
+      document.title = `${view.label} · ${APP_TITLE}`;
+
+      /* History API — enables back/forward */
+      if (pushState) {
+        history.pushState({ viewId: targetId }, '', `#${targetId}`);
+      }
+
+      /* Scroll to top of content area */
+      document.getElementById('appMain')?.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      /* Close mobile drawer if open */
+      closeDrawer();
+    }
+
+    /* ── ❸  EVENT DELEGATION — single listener for all nav clicks ── */
+    document.addEventListener('click', function (e) {
+      const btn = e.target.closest('[data-view]');
+      if (btn) {
+        e.preventDefault();
+        navigateTo(btn.dataset.view);
+      }
+    });
+
+    /* ── ❹  BROWSER BACK / FORWARD ───────────────────────────── */
+    window.addEventListener('popstate', function (e) {
+      const viewId = e.state?.viewId || location.hash.slice(1) || 'home';
+      navigateTo(viewId, false);
+    });
+
+    /* ── ❺  INITIAL LOAD — respect URL hash ─────────────────── */
+    (function () {
+      const hash = location.hash.slice(1);
+      const initial = VIEWS.find(v => v.id === hash) ? hash : 'home';
+      navigateTo(initial, false);
+    })();
+
+    /* ═══════════════════════════════════════════════════════════
+       MOBILE DRAWER
+    ═══════════════════════════════════════════════════════════ */
+    const drawer       = document.getElementById('mobileDrawer');
+    const drawerOverlay = document.getElementById('drawerOverlay');
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const drawerClose  = document.getElementById('drawerClose');
+
+    function openDrawer() {
+      drawer.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+      hamburgerBtn.setAttribute('aria-expanded', 'true');
+      drawerClose.focus();
+    }
+    function closeDrawer() {
+      drawer.classList.remove('is-open');
+      document.body.style.overflow = '';
+      hamburgerBtn.setAttribute('aria-expanded', 'false');
+    }
+
+    hamburgerBtn.addEventListener('click', openDrawer);
+    drawerClose.addEventListener('click', closeDrawer);
+    drawerOverlay.addEventListener('click', closeDrawer);
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && drawer.classList.contains('is-open')) closeDrawer();
+    });
+
+    /* Reset on resize */
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 768) closeDrawer();
+    });
+
+    /* ═══════════════════════════════════════════════════════════
+       TOAST NOTIFICATIONS
+       Usage: showToast('Your message here')
+    ═══════════════════════════════════════════════════════════ */
+    function showToast(message) {
+      const stack = document.getElementById('toastStack');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      toast.setAttribute('role', 'status');
+      stack.appendChild(toast);
+      /* Remove after animation completes (~3s) */
+      setTimeout(() => toast.remove(), 3200);
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       FORM HELPERS
+    ═══════════════════════════════════════════════════════════ */
+    function setAmount(value) {
+      const input = document.getElementById('giveAmount');
+      if (input) {
+        input.value = value;
+        input.focus();
+      }
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+       CTA BUTTON — demo action
+    ═══════════════════════════════════════════════════════════ */
+    document.getElementById('ctaBtn')?.addEventListener('click', () => {
+      navigateTo('forms');
+      showToast('✦ Opening Giving page…');
+    });
+    document.getElementById('drawerCta')?.addEventListener('click', () => {
+      navigateTo('forms');
+      showToast('✦ Opening Giving page…');
+    });
+  </script>
+
+</body>
+</html>
